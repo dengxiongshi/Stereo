@@ -5,7 +5,12 @@ add_compile_options(-std=c++17)
 add_compile_options(-O3 -Wextra -Wdeprecated -fPIC)
 set(CMAKE_CXX_STANDARD 17)
 
-find_package(OpenCV REQUIRED)
+#if (ENABLE_OM)
+#    set(OpenCV_INCLUDE_DIRS include/opencv)
+#    set(OpenCV_LIBS lib/opencv/*.so)
+#else()
+#    find_package(OpenCV REQUIRED)
+#endif()
 
 include_directories(
   include

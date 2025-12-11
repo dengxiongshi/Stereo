@@ -138,7 +138,7 @@ public:
   std::vector<size_t> default_shape_;
   size_t              byte_size_per_element_;
 
-  ONNXTensorElementDataType tensor_data_type_;
+  aclDataType  tensor_data_type_;
 
   std::unique_ptr<u_char[]> self_maintain_buffer_host_{nullptr};
 };

@@ -21,22 +21,22 @@ public:
   }
 
 private:
-  const OrtInferCoreParams params_;
+  const OmInferCoreParams params_;
 };
 
-std::shared_ptr<BaseInferCoreFactory> CreateOrtInferCoreFactory(
+std::shared_ptr<BaseInferCoreFactory> CreateOmInferCoreFactory(
     const std::string                                             model_path,
     const std::unordered_map<std::string, std::vector<uint64_t>> &input_blobs_shape,
     const std::unordered_map<std::string, std::vector<uint64_t>> &output_blobs_shape,
     const int                                                     device_id)
 {
-  OrtInferCoreParams params;
+  OmInferCoreParams params;
   params.model_path          = model_path;
   params.input_blobs_shape  = input_blobs_shape;
   params.output_blobs_shape = output_blobs_shape;
   params.device_id        = device_id;
 
-  return std::make_shared<OrtInferCoreFactory>(params);
+  return std::make_shared<OmInferCoreFactory>(params);
 }
 
 } // namespace easy_deploy

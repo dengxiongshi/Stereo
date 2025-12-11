@@ -24,46 +24,41 @@ if(ENABLE_ORT)
     list(APPEND platform_core_packages ort_core)
 endif()
 
-#set(GTEST_ROOT "/usr/local/lib" CACHE PATH "GTest installation root")
-#find_package(GTest REQUIRED)
-#if (NOT TARGET GTest::gtest_main)
-#    message(FATAL_ERROR "GTest::gtest_main 目标不存在，请检查 GTest 安装")
+if(ENABLE_OM)
+    list(APPEND platform_core_packages om_core)
+endif()
+
+#if (ENABLE_OM)
+#    set(OpenCV_INCLUDE_DIRS ${PROJECT_SOURCE_DIR}/include/opencv)
+#    file(GLOB OpenCV_LIBS ${PROJECT_SOURCE_DIR}/lib/opencv/*.so)
+#    # 可选：验证库文件是否存在
+#    if (NOT OpenCV_LIBS)
+#        message(FATAL_ERROR "ENABLE_OM=ON时，未找到OpenCV库：${PROJECT_SOURCE_DIR}/lib/opencv/*.so")
+#    endif()
+#else()
+#    find_package(OpenCV REQUIRED)
 #endif()
-#find_package(glog REQUIRED)
-find_package(OpenCV REQUIRED)
+
+# 复用deploy的OpenCV缓存变量（不受project影响）
+if(NOT DEFINED OpenCV_INCLUDE_DIRS OR NOT DEFINED OpenCV_LIBS)
+    message(FATAL_ERROR "未找到OpenCV配置！请先编译deploy目录")
+endif()
 
 
 set(source_file test_stereo_banet2d.cpp)
 
 include_directories(
     include
-#    ${CMAKE_SOURCE_DIR}/include
     ${OpenCV_INCLUDE_DIRS}
-#    ${CMAKE_SOURCE_DIR}/easy_deploy_tool/deploy_core/include
-#    ${CMAKE_SOURCE_DIR}/easy_deploy_tool/deploy_utils
-#    ${CMAKE_SOURCE_DIR}/easy_deploy_tool/deploy_utils/common_utils/include
-#    ${CMAKE_SOURCE_DIR}/easy_deploy_tool/deploy_utils/image_processing_utils/include
-#    ${CMAKE_SOURCE_DIR}/easy_deploy_tool/deploy_utils/test_utils/include
-#    ${CMAKE_SOURCE_DIR}/easy_deploy_tool/inference_core/ort_core/include
 )
-
-#add_library(${PROJECT_NAME} SHARED ${source_file})
-
 
 add_executable(test_stereo_banet ${source_file})
 
-#target_include_directories(test_stereo_lightstereo PUBLIC ${PROJECT_SOURCE_DIR}/include)
-
 target_link_libraries(test_stereo_banet PUBLIC
-
-#        GTest::gtest_main
-#        glog::glog
         ${OpenCV_LIBS}
         deploy_core
         image_processing_utils
-#        common_utils
         deploy
-#        test_utils
         ${platform_core_packages}
 )
 
@@ -77,5 +72,9 @@ endif()
 
 if(ENABLE_ORT)
     target_compile_definitions(test_stereo_banet PRIVATE ENABLE_ORT)
+endif()
+
+if(ENABLE_OM)
+    target_compile_definitions(test_stereo_banet PRIVATE ENABLE_OM)
 endif()
 

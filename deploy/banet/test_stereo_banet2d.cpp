@@ -8,13 +8,14 @@
 #include <iostream>
 #include <fstream>
 #include <memory>
-#include "image_processing_utils/image_processing_utils.hpp"
+//#include "image_processing_utils/image_processing_utils.hpp"
 #include "stereo/banet.hpp"
 //#include "test_utils/stereo_matching_test_utils.hpp"
 //#include <opencv2/opencv.hpp>  // 假设用OpenCV处理图像
 #include <opencv2/core/core.hpp>
-#include <opencv2/highgui/highgui.hpp>
+//#include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
+#include <opencv2/imgcodecs/imgcodecs.hpp>
 
 using namespace easy_deploy;
 
@@ -314,6 +315,67 @@ public:
 };
 #endif
 
+#ifdef ENABLE_OM
+#include "om_core/om_core.hpp"
+
+class BANet_Om_Fixture : public BasebanetFixture {
+public:
+    bool SetUp() override {
+        try {
+            // 创建ONNX推理引擎（捕获可能的异常）
+            std::cout << "[INFO] 创建TensorRT推理引擎..." << std::endl;
+            auto engine = CreateOmInferCore(
+                    "/mnt/d/python_work/DepthEstimation/BANet/banet-2d/weights/kitti.engine",
+                    {{"left", {1, 3, 256, 512}}, {"right", {1, 3, 256, 512}}},  // 输入形状
+                    {{"disp_pred", {1, 1, 256, 512}}}                                   // 输出形状
+            );
+            if (!engine) {
+                std::cerr << "[ERROR] ONNX推理引擎创建失败！" << std::endl;
+                return false;
+            }
+
+            // 创建预处理模块
+            std::cout << "[INFO] 创建图像预处理模块..." << std::endl;
+            auto preprocess_block = CreateCpuImageProcessingResizePad(
+                    ImageProcessingPadMode::TOP_RIGHT,
+                    ImageProcessingPadValue::EDGE,
+                    true, true,
+                    {0, 0, 0},  // 均值
+                    {1, 1, 1}     // 标准差
+            );
+            if (!preprocess_block) {
+                std::cerr << "[ERROR] 预处理模块创建失败！" << std::endl;
+                return false;
+            }
+
+            // 初始化立体匹配模型
+            std::cout << "[INFO] 初始化立体匹配模型..." << std::endl;
+            banet_model_ = CreateBANetModel(
+                    engine, preprocess_block, 256, 512,
+                    {"left", "right"},  // 输入名称
+                    {"disp_pred"}               // 输出名称
+            );
+            if (!banet_model_) {
+                std::cerr << "[ERROR] 立体匹配模型初始化失败！" << std::endl;
+                return false;
+            }
+
+            // 初始化测试参数
+            speed_test_predict_rounds_    = 100;
+            left_image_path_              = "./../../data/left.png";
+            right_image_path_             = "./../../data/right.png";
+            test_banet_result_path_       = "./banet_trt_test_result.png";
+
+            std::cout << "[INFO] 初始化完成！" << std::endl;
+            return true;
+        } catch (const std::exception& e) {
+            std::cerr << "[ERROR] 初始化过程抛出异常：" << e.what() << std::endl;
+            return false;
+        }
+    }
+};
+#endif
+
 // 主函数：调用Fixture类执行所有测试流程
 int main() {
     std::cout << "===== Lightstereo 多推理引擎测试程序 =====" << std::endl;
@@ -328,8 +390,11 @@ int main() {
 #elif defined(ENABLE_RKNN)
     std::cout << "[INFO] 启用 RKNN 推理引擎" << std::endl;
     test_fixture = std::make_unique<BANet_Rknn_Fixture>();
+#elif defined(ENABLE_OM)
+    std::cout << "[INFO] 启用 OM 推理引擎" << std::endl;
+    test_fixture = std::make_unique<BANet_Om_Fixture>();
 #else
-    std::cerr << "[ERROR] 未启用任何推理引擎！请定义 ENABLE_TENSORRT/ENABLE_ORT/ENABLE_RKNN" << std::endl;
+    std::cerr << "[ERROR] 未启用任何推理引擎！请定义 ENABLE_TENSORRT/ENABLE_ORT/ENABLE_RKNN/ENABLE_OM" << std::endl;
     return 1;
 #endif
 

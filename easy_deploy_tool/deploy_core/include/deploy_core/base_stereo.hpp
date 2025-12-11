@@ -3,7 +3,11 @@
 #include "deploy_core/base_infer_core.hpp"
 #include "common_utils/pipeline_image.hpp"
 
-#include <opencv2/opencv.hpp>
+//#include <opencv2/opencv.hpp>
+#include <opencv2/core/core.hpp>
+//#include <opencv2/highgui/highgui.hpp>
+#include <opencv2/imgproc/imgproc.hpp>
+#include <opencv2/imgcodecs/imgcodecs.hpp>
 
 namespace easy_deploy {
 
