@@ -1,0 +1,1 @@
+/usr/bin/aarch64-linux-gnu-g++ -fPIC -shared -Wl,-soname,libcommon_utils.so -o libcommon_utils.so CMakeFiles/common_utils.dir/src/log.cpp.o 
