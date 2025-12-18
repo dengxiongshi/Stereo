@@ -45,7 +45,7 @@ if(NOT DEFINED OpenCV_INCLUDE_DIRS OR NOT DEFINED OpenCV_LIBS)
 endif()
 
 
-set(source_file test_stereo_banet2d.cpp)
+set(source_file test_stereo_banet2d_tt.cpp)
 
 include_directories(
     include

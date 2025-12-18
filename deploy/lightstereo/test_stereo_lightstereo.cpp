@@ -193,7 +193,7 @@ public:
 //};
 //#endif
 
-#ifdef ENABLE_ORT
+//#ifdef ENABLE_ORT
  #include "ort_core/ort_core.hpp"
 
  class Lightstereo_OnnxRuntime_Fixture : public BaselightstereoFixture {
@@ -252,7 +252,7 @@ public:
          }
      }
  };
-#endif
+//#endif
 
 //#ifdef ENABLE_RKNN
 //#include "rknn_core/rknn_core.hpp"
@@ -382,22 +382,22 @@ int main() {
     std::cout << "===== Lightstereo 多推理引擎测试程序 =====" << std::endl;
     std::unique_ptr<BaselightstereoFixture> test_fixture = nullptr;
 
-#if defined(ENABLE_TENSORRT)
-    std::cout << "[INFO] 启用 TensorRT 推理引擎" << std::endl;
-    test_fixture = std::make_unique<Lightstereo_TensorRT_Fixture>();
-#elif defined(ENABLE_ORT)
+//#if defined(ENABLE_TENSORRT)
+//    std::cout << "[INFO] 启用 TensorRT 推理引擎" << std::endl;
+//    test_fixture = std::make_unique<Lightstereo_TensorRT_Fixture>();
+//#elif defined(ENABLE_ORT)
      std::cout << "[INFO] 启用 ONNX Runtime 推理引擎" << std::endl;
      test_fixture = std::make_unique<Lightstereo_OnnxRuntime_Fixture>();
-#elif defined(ENABLE_RKNN)
-    std::cout << "[INFO] 启用 RKNN 推理引擎" << std::endl;
-    test_fixture = std::make_unique<Lightstereo_Rknn_Fixture>();
- #elif defined(ENABLE_OM)
-    std::cout << "[INFO] 启用 OM 推理引擎" << std::endl;
-    test_fixture = std::make_unique<LightStereo_Om_Fixture>();
-#else
-    std::cerr << "[ERROR] 未启用任何推理引擎！请定义 ENABLE_TENSORRT/ENABLE_ORT/ENABLE_RKNN" << std::endl;
-    return 1;
-#endif
+//#elif defined(ENABLE_RKNN)
+//    std::cout << "[INFO] 启用 RKNN 推理引擎" << std::endl;
+//    test_fixture = std::make_unique<Lightstereo_Rknn_Fixture>();
+// #elif defined(ENABLE_OM)
+//    std::cout << "[INFO] 启用 OM 推理引擎" << std::endl;
+//    test_fixture = std::make_unique<LightStereo_Om_Fixture>();
+//#else
+//    std::cerr << "[ERROR] 未启用任何推理引擎！请定义 ENABLE_TENSORRT/ENABLE_ORT/ENABLE_RKNN" << std::endl;
+//    return 1;
+//#endif
 
     // 步骤1：初始化（模型、参数）
     if (!test_fixture->SetUp()) {
