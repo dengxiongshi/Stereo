@@ -1,1 +1,6 @@
+<<<<<<< HEAD
 easy_deploy_tool/inference_core/om_core/ascend-aarch64/lib/libtvm.so
+=======
+build
+.idea/
+>>>>>>> 30deae2349e118338c04efc88008cf2eb48dce4f

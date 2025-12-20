@@ -8,7 +8,7 @@
 #include <iostream>
 #include <fstream>
 #include <memory>
-#include "om_core/om_core.hpp"
+//#include "om_core/om_core.hpp"
 // #include "image_processing_utils/image_processing_utils.hpp"
 #include "stereo/lightstereo.hpp"
 //#include "test_utils/stereo_matching_test_utils.hpp"
@@ -194,64 +194,64 @@ public:
 //#endif
 
 //#ifdef ENABLE_ORT
-// #include "ort_core/ort_core.hpp"
-//
-// class Lightstereo_OnnxRuntime_Fixture : public BaselightstereoFixture {
-// public:
-//     bool SetUp() override {
-//         try {
-//             // 创建ONNX推理引擎（捕获可能的异常）
-//             std::cout << "[INFO] 创建Onnx Runtime推理引擎..." << std::endl;
-//             auto engine = CreateOrtInferCore(
-//                     "/mnt/d/python_work/DepthEstimation/OpenStereo/weights/LightStereo-S-KITTI_ori.onnx",
-//                     {{"left", {1, 3, 256, 512}}, {"right", {1, 3, 256, 512}}},  // 输入形状
-//                     {{"disp_pred", {1, 1, 256, 512}}}                                   // 输出形状
-//             );
-//             if (!engine) {
-//                 std::cerr << "[ERROR] ONNX推理引擎创建失败！" << std::endl;
-//                 return false;
-//             }
-//
-//             // 创建预处理模块
-//             std::cout << "[INFO] 创建图像预处理模块..." << std::endl;
-//             auto preprocess_block = CreateCpuImageProcessingResizePad(
-//                     ImageProcessingPadMode::TOP_RIGHT,
-//                     ImageProcessingPadValue::EDGE,
-//                     true, true,
-//                     {123.675, 116.28, 103.53},  // 均值
-//                     {58.395, 57.12, 57.375}     // 标准差
-//             );
-//             if (!preprocess_block) {
-//                 std::cerr << "[ERROR] 预处理模块创建失败！" << std::endl;
-//                 return false;
-//             }
-//
-//             // 初始化立体匹配模型
-//             std::cout << "[INFO] 初始化立体匹配模型..." << std::endl;
-//             lightstereo_model_ = CreateLightStereoModel(
-//                     engine, preprocess_block, 256, 512,
-//                     {"left", "right"},  // 输入名称
-//                     {"disp_pred"}               // 输出名称
-//             );
-//             if (!lightstereo_model_) {
-//                 std::cerr << "[ERROR] 立体匹配模型初始化失败！" << std::endl;
-//                 return false;
-//             }
-//
-//             // 初始化测试参数
-//             speed_test_predict_rounds_    = 100;
-//             left_image_path_              = "./../../../lightstereo_cpp/test_data/left.png";
-//             right_image_path_             = "./../../../lightstereo_cpp/test_data/right.png";
-//             test_lightstereo_result_path_ = "./lightstereo_ort_test_result.png";
-//
-//             std::cout << "[INFO] 初始化完成！" << std::endl;
-//             return true;
-//         } catch (const std::exception& e) {
-//             std::cerr << "[ERROR] 初始化过程抛出异常：" << e.what() << std::endl;
-//             return false;
-//         }
-//     }
-// };
+ #include "ort_core/ort_core.hpp"
+
+ class Lightstereo_OnnxRuntime_Fixture : public BaselightstereoFixture {
+ public:
+     bool SetUp() override {
+         try {
+             // 创建ONNX推理引擎（捕获可能的异常）
+             std::cout << "[INFO] 创建Onnx Runtime推理引擎..." << std::endl;
+             auto engine = CreateOrtInferCore(
+                     "/mnt/d/python_work/DepthEstimation/OpenStereo/weights/LightStereo-S-KITTI_ori.onnx",
+                     {{"left", {1, 3, 256, 512}}, {"right", {1, 3, 256, 512}}},  // 输入形状
+                     {{"disp_pred", {1, 1, 256, 512}}}                                   // 输出形状
+             );
+             if (!engine) {
+                 std::cerr << "[ERROR] ONNX推理引擎创建失败！" << std::endl;
+                 return false;
+             }
+
+             // 创建预处理模块
+             std::cout << "[INFO] 创建图像预处理模块..." << std::endl;
+             auto preprocess_block = CreateCpuImageProcessingResizePad(
+                     ImageProcessingPadMode::TOP_RIGHT,
+                     ImageProcessingPadValue::EDGE,
+                     true, true,
+                     {123.675, 116.28, 103.53},  // 均值
+                     {58.395, 57.12, 57.375}     // 标准差
+             );
+             if (!preprocess_block) {
+                 std::cerr << "[ERROR] 预处理模块创建失败！" << std::endl;
+                 return false;
+             }
+
+             // 初始化立体匹配模型
+             std::cout << "[INFO] 初始化立体匹配模型..." << std::endl;
+             lightstereo_model_ = CreateLightStereoModel(
+                     engine, preprocess_block, 256, 512,
+                     {"left", "right"},  // 输入名称
+                     {"disp_pred"}               // 输出名称
+             );
+             if (!lightstereo_model_) {
+                 std::cerr << "[ERROR] 立体匹配模型初始化失败！" << std::endl;
+                 return false;
+             }
+
+             // 初始化测试参数
+             speed_test_predict_rounds_    = 100;
+             left_image_path_              = "./../../data/left.png";
+             right_image_path_             = "./../../data/right.png";
+             test_lightstereo_result_path_ = "./lightstereo_ort_test_result.png";
+
+             std::cout << "[INFO] 初始化完成！" << std::endl;
+             return true;
+         } catch (const std::exception& e) {
+             std::cerr << "[ERROR] 初始化过程抛出异常：" << e.what() << std::endl;
+             return false;
+         }
+     }
+ };
 //#endif
 
 //#ifdef ENABLE_RKNN
@@ -316,8 +316,8 @@ public:
 //#endif
 
 
-// #ifdef ENABLE_OM
-// #include "om_core/om_core.hpp"
+ #ifdef ENABLE_OM
+ #include "om_core/om_core.hpp"
 
 class LightStereo_Om_Fixture : public BaselightstereoFixture {
 public:
@@ -375,7 +375,7 @@ public:
         }
     }
 };
-// #endif
+ #endif
 
 // 主函数：调用Fixture类执行所有测试流程
 int main() {
@@ -386,14 +386,14 @@ int main() {
 //    std::cout << "[INFO] 启用 TensorRT 推理引擎" << std::endl;
 //    test_fixture = std::make_unique<Lightstereo_TensorRT_Fixture>();
 //#elif defined(ENABLE_ORT)
-    // std::cout << "[INFO] 启用 ONNX Runtime 推理引擎" << std::endl;
-    // test_fixture = std::make_unique<Lightstereo_OnnxRuntime_Fixture>();
+     std::cout << "[INFO] 启用 ONNX Runtime 推理引擎" << std::endl;
+     test_fixture = std::make_unique<Lightstereo_OnnxRuntime_Fixture>();
 //#elif defined(ENABLE_RKNN)
 //    std::cout << "[INFO] 启用 RKNN 推理引擎" << std::endl;
 //    test_fixture = std::make_unique<Lightstereo_Rknn_Fixture>();
 // #elif defined(ENABLE_OM)
-    std::cout << "[INFO] 启用 OM 推理引擎" << std::endl;
-    test_fixture = std::make_unique<LightStereo_Om_Fixture>();
+//    std::cout << "[INFO] 启用 OM 推理引擎" << std::endl;
+//    test_fixture = std::make_unique<LightStereo_Om_Fixture>();
 //#else
 //    std::cerr << "[ERROR] 未启用任何推理引擎！请定义 ENABLE_TENSORRT/ENABLE_ORT/ENABLE_RKNN" << std::endl;
 //    return 1;

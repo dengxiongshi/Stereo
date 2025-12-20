@@ -7,15 +7,15 @@ set(CMAKE_CXX_STANDARD 17)
 
 message(STATUS "Building Om-Core on aarch64 platform ...")
 set(ASCEND_INCLUDE_DIRS ${PROJECT_SOURCE_DIR}/ascend-aarch64/include)
-# FILE(GLOB ASCEND_LIBS ${PROJECT_SOURCE_DIR}/ascend-aarch64/lib/*.so)
+ FILE(GLOB ASCEND_LIBS ${PROJECT_SOURCE_DIR}/ascend-aarch64/lib/*.so)
 
-set(LIB_PATH
-/usr/local/Ascend/ascend-toolkit/7.0.0/aarch64-linux/lib64
-# /usr/local/Ascend/ascend-toolkit/latest/runtime/lib64
-# /usr/local/Ascend/ascend-toolkit/latest/runtime/lib64/stub
-# /usr/local/Ascend/ascend-toolkit/latest/runtime/lib64/stub/aarch64
-)
-FILE(GLOB ASCEND_LIBS ${LIB_PATH}/*.so)
+#set(LIB_PATH
+#/usr/local/Ascend/ascend-toolkit/7.0.0/aarch64-linux/lib64
+## /usr/local/Ascend/ascend-toolkit/latest/runtime/lib64
+## /usr/local/Ascend/ascend-toolkit/latest/runtime/lib64/stub
+## /usr/local/Ascend/ascend-toolkit/latest/runtime/lib64/stub/aarch64
+#)
+#FILE(GLOB ASCEND_LIBS ${LIB_PATH}/*.so)
 
 
 set(source_file
