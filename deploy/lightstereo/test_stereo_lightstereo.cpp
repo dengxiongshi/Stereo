@@ -313,7 +313,7 @@ public:
         try {
             std::cout << "[INFO] 创建Ascend OM推理引擎..." << std::endl;
             auto engine = CreateOmInferCore(
-                    "./lightstereo-kittl.om",
+                    "../../weights/lightstereo-kittl.om",
                     {{"left", {1, 3, 256, 512}}, {"right", {1, 3, 256, 512}}},
                     {{"disp_pred", {1, 1, 256, 512}}}
             );
@@ -350,8 +350,8 @@ public:
 
             // 初始化测试参数
             speed_test_predict_rounds_    = 100;
-            left_image_path_              = "./left.png";
-            right_image_path_             = "./right.png";
+            left_image_path_              = "../../data/left.png";
+            right_image_path_             = "../../data/right.png";
             test_lightstereo_result_path_ = "./lightstereo_om_test_result.png";
 
             std::cout << "[INFO] 初始化完成！" << std::endl;
