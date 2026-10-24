@@ -8,7 +8,7 @@
 #include <iostream>
 #include <fstream>
 #include <memory>
-//#include "image_processing_utils/image_processing_utils.hpp"
+#include "image_processing_utils/image_processing_utils.hpp"
 #include "stereo/banet.hpp"
 //#include "test_utils/stereo_matching_test_utils.hpp"
 //#include <opencv2/opencv.hpp>  // 假设用OpenCV处理图像
@@ -142,7 +142,7 @@ public:
             // 创建ONNX推理引擎（捕获可能的异常）
             std::cout << "[INFO] 创建TensorRT推理引擎..." << std::endl;
             auto engine = CreateTrtInferCore(
-                    "/mnt/d/python_work/DepthEstimation/BANet/banet-2d/weights/kitti.engine",
+                    "/mnt/g/python_work/DepthEstimation/BANet/banet-2d/weights/kitti.engine",
                     {{"left", {1, 3, 256, 512}}, {"right", {1, 3, 256, 512}}},  // 输入形状
                     {{"disp_pred", {1, 1, 256, 512}}}                                   // 输出形状
             );
@@ -203,7 +203,7 @@ public:
             // 创建ONNX推理引擎（捕获可能的异常）
             std::cout << "[INFO] 创建Onnx Runtime推理引擎..." << std::endl;
             auto engine = CreateOrtInferCore(
-                    "/mnt/d/python_work/DepthEstimation/BANet/banet-2d/weights/kitti_ori.onnx",
+                    "/mnt/g/python_work/DepthEstimation/BANet/banet-2d/weights/kitti_ori.onnx",
                     {{"left", {1, 3, 256, 512}}, {"right", {1, 3, 256, 512}}},  // 输入形状
                     {{"disp_pred", {1, 1, 256, 512}}}                                   // 输出形状
             );
@@ -323,14 +323,14 @@ public:
     bool SetUp() override {
         try {
             // 创建ONNX推理引擎（捕获可能的异常）
-            std::cout << "[INFO] 创建TensorRT推理引擎..." << std::endl;
+            std::cout << "[INFO] 创建Ascend OM推理引擎..." << std::endl;
             auto engine = CreateOmInferCore(
-                    "./../..//weights/BANet-kittl.om",
-                    {{"left", {1, 3, 256, 512}}, {"right", {1, 3, 256, 512}}},  // 输入形状
-                    {{"disp_pred", {1, 1, 256, 512}}}                                   // 输出形状
+                    "./BANet-kittl.om",
+                    {{"left", {1, 3, 256, 512}}, {"right", {1, 3, 256, 512}}},
+                    {{"disp_pred", {1, 1, 256, 512}}}
             );
             if (!engine) {
-                std::cerr << "[ERROR] ONNX推理引擎创建失败！" << std::endl;
+                std::cerr << "[ERROR] Ascend推理引擎创建失败！" << std::endl;
                 return false;
             }
 
@@ -352,8 +352,8 @@ public:
             std::cout << "[INFO] 初始化立体匹配模型..." << std::endl;
             banet_model_ = CreateBANetModel(
                     engine, preprocess_block, 256, 512,
-                    {"left", "right"},  // 输入名称
-                    {"disp_pred"}               // 输出名称
+                    {"left", "right"},
+                    {"disp_pred"}
             );
             if (!banet_model_) {
                 std::cerr << "[ERROR] 立体匹配模型初始化失败！" << std::endl;
@@ -362,9 +362,9 @@ public:
 
             // 初始化测试参数
             speed_test_predict_rounds_    = 100;
-            left_image_path_              = "./../../data/left.png";
-            right_image_path_             = "./../../data/right.png";
-            test_banet_result_path_       = "./banet_trt_test_result.png";
+            left_image_path_              = "./left.png";
+            right_image_path_             = "./right.png";
+            test_banet_result_path_       = "./banet_om_test_result.png";
 
             std::cout << "[INFO] 初始化完成！" << std::endl;
             return true;

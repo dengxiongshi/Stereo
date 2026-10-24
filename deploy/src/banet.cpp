@@ -75,7 +75,7 @@ namespace easy_deploy {
     {
         auto package = std::dynamic_pointer_cast<StereoPipelinePackage>(_package);
         CHECK_STATE(package != nullptr,
-                    "[LightStereo] PreProcess the `_package` instance does not belong to "
+                    "[BANet] PreProcess the `_package` instance does not belong to "
                     "`DetectionPipelinePackage`");
 
         auto blobs_tensor = package->GetInferBuffer();

@@ -1,9 +1,9 @@
 SET ( CMAKE_SYSTEM_NAME Linux )
 SET ( CMAKE_SYSTEM_PROCESSOR aarch64 )
 # when hislicon SDK was installed, toolchain was installed in the path as below:
-SET ( CMAKE_C_COMPILER "/usr/bin/aarch64-linux-gnu-gcc" )
-SET ( CMAKE_CXX_COMPILER "/usr/bin/aarch64-linux-gnu-g++" )
-SET ( CMAKE_FIND_ROOT_PATH "/usr/bin") 
+SET ( CMAKE_C_COMPILER "/opt/toolchain/7.3.0/toolchain/bin/aarch64-target-linux-gnu-gcc" )
+SET ( CMAKE_CXX_COMPILER "/opt/toolchain/7.3.0/toolchain/bin/aarch64-target-linux-gnu-g++" )
+SET ( CMAKE_FIND_ROOT_PATH "/opt/toolchain/7.3.0/toolchain/bin")
 
 # set searching rules for cross-compiler
 SET ( CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER )

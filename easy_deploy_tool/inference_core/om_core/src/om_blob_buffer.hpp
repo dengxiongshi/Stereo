@@ -3,6 +3,7 @@
 #include <assert.h>
 #include <string.h>
 #include <acl/acl.h>
+#include "common_utils/log.hpp"
 #include "deploy_core/blob_buffer.hpp"
 
 namespace easy_deploy {

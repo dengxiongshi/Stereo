@@ -10,7 +10,7 @@
 #include <memory>
 #include "image_processing_utils/image_processing_utils.hpp"
 #include "stereo/banet.hpp"
-#include "test_utils/stereo_matching_test_utils.hpp"
+//#include "test_utils/stereo_matching_test_utils.hpp"
 #include "ort_core/ort_core.hpp"
 #include <opencv2/opencv.hpp>  // 假设用OpenCV处理图像
 //#include <opencv2/highgui/highgui.hpp>
@@ -71,8 +71,8 @@ public:
 
             // 初始化测试参数
             speed_test_predict_rounds_    = 100;
-            left_image_path_              = "./../../../lightstereo_cpp/test_data/left.png";
-            right_image_path_             = "./../../../lightstereo_cpp/test_data/right.png";
+            left_image_path_              = "./../../data/left.png";
+            right_image_path_             = "./../../data/right.png";
             test_banet_result_path_       = "./banet_ort_test_result.png";
 
             std::cout << "[INFO] 初始化完成！" << std::endl;
