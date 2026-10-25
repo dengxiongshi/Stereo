@@ -24,12 +24,11 @@ cd build/bin
 注意：
 
 1. 对于香橙派AI Pro OM模型，其中OpenCV是经过简化编译，剔除了PNG、JPEG，只支持bmp图片的读写
+2. ONNX转成的OM模型，其输出的node名与ONNX模型的输出名不同，需要使用deploy/test.py来确定
 
-ONNX转成的OM模型，其输出的node名与ONNX模型的输出名不同，需要使用deploy/test.py来确定
+       a. 程序依赖acl库，参考 [基于 Caffe ResNet-50 网络实现图片分类](https://gitee.com/ascend/samples/blob/master/python/level2_simple_inference/1_classification/resnet50_imagenet_classification/README_CN.md?svcp_stk=1_t9kS9Iz7z_6ne2efCtV5ZnmHhFnkWNlf_XTmsNLGNKu9f1U5BvzoQjba4ZA9JnPT01Dnga2r2Z_hVOf12RJ6gANL7q1nVIBrOUZ0LRoL2tC62ucrcNuQ1EWSL6zH7vFc3-vqceRqdsRkij2w1X_auT_TekO3eXXBM1P4Vk7xQcf_7iZO5eIkhwXYPg3v9npreyQ7hc8Nv7vewGJWvXk1tg%3D%3D)来搭建环境
 
-a. 程序依赖acl库，参考 [基于 Caffe ResNet-50 网络实现图片分类](https://gitee.com/ascend/samples/blob/master/python/level2_simple_inference/1_classification/resnet50_imagenet_classification/README_CN.md?svcp_stk=1_t9kS9Iz7z_6ne2efCtV5ZnmHhFnkWNlf_XTmsNLGNKu9f1U5BvzoQjba4ZA9JnPT01Dnga2r2Z_hVOf12RJ6gANL7q1nVIBrOUZ0LRoL2tC62ucrcNuQ1EWSL6zH7vFc3-vqceRqdsRkij2w1X_auT_TekO3eXXBM1P4Vk7xQcf_7iZO5eIkhwXYPg3v9npreyQ7hc8Nv7vewGJWvXk1tg%3D%3D)来搭建环境
-
- b. 确定好输出名后，有以下几点需要修改：
+       b. 确定好输出名后，有以下几点需要修改：
 
  test_stereo_lightstereo.cpp
 
