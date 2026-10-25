@@ -79,11 +79,11 @@ float ImageProcessingCpuResizePad::Process(std::shared_ptr<IPipelineImageData> i
 
   // 2. rebuild the cv::Mat format image
   cv::Mat input_image(image_height, image_width, CV_8UC3, image_data_info.data_pointer);
-  cv::imwrite("input_image.png", input_image);
+  cv::imwrite("input_image.bmp", input_image);
   // 3. resize and padding to the left-top
   cv::Mat resized_image;
   cv::resize(input_image, resized_image, {fix_width, fix_height});
-  cv::imwrite("resized_image.png", resized_image);
+  cv::imwrite("resized_image.bmp", resized_image);
 
   int top = 0, bottom = 0, left = 0, right = 0;
   switch (pad_mode_)
@@ -127,7 +127,7 @@ float ImageProcessingCpuResizePad::Process(std::shared_ptr<IPipelineImageData> i
       throw std::runtime_error("[ImageProcessingCpu] Unkown pad value!");
       break;
   }
-  cv::imwrite("dst_image.png", dst_image);
+  cv::imwrite("dst_image.bmp", dst_image);
   if (!do_transpose_)
   {
     // 4. flip and norm

@@ -313,9 +313,9 @@ public:
         try {
             std::cout << "[INFO] 创建Ascend OM推理引擎..." << std::endl;
             auto engine = CreateOmInferCore(
-                    "../../weights/lightstereo-kittl.om",
+                    "../../weights/LightStereo-S-KITTI.om",
                     {{"left", {1, 3, 256, 512}}, {"right", {1, 3, 256, 512}}},
-                    {{"disp_pred", {1, 1, 256, 512}}}
+                    {{"PartitionedCall_/ReduceSum_1_ReduceSum_217:0:disp_pred", {1, 1, 256, 512}}}
             );
             if (!engine) {
                 std::cerr << "[ERROR] Ascend推理引擎创建失败！" << std::endl;
@@ -341,7 +341,7 @@ public:
             lightstereo_model_ = CreateLightStereoModel(
                     engine, preprocess_block, 256, 512,
                     {"left", "right"},
-                    {"disp_pred"}
+                    {"PartitionedCall_/ReduceSum_1_ReduceSum_217:0:disp_pred"}
             );
             if (!lightstereo_model_) {
                 std::cerr << "[ERROR] 立体匹配模型初始化失败！" << std::endl;
@@ -350,9 +350,9 @@ public:
 
             // 初始化测试参数
             speed_test_predict_rounds_    = 100;
-            left_image_path_              = "../../data/left.png";
-            right_image_path_             = "../../data/right.png";
-            test_lightstereo_result_path_ = "./lightstereo_om_test_result.png";
+            left_image_path_              = "../../data/left.bmp";
+            right_image_path_             = "../../data/right.bmp";
+            test_lightstereo_result_path_ = "./lightstereo_om_test_result.bmp";
 
             std::cout << "[INFO] 初始化完成！" << std::endl;
             return true;

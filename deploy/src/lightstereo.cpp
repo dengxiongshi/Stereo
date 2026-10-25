@@ -1,7 +1,88 @@
+#include <cstdint>
+#include <cstring>
 #include <opencv2/highgui/highgui.hpp>
 #include "stereo/lightstereo.hpp"
 
 namespace easy_deploy {
+
+namespace {
+
+inline float Fp16ToFp32(uint16_t h)
+{
+  const uint32_t sign = (h >> 15) & 1u;
+  const uint32_t exp  = (h >> 10) & 0x1fu;
+  const uint32_t mant = h & 0x3ffu;
+  uint32_t       f;
+  if (exp == 0)
+  {
+    if (mant == 0)
+    {
+      f = sign << 31;
+    } else
+    {
+      uint32_t e = 1;
+      uint32_t m = mant;
+      while ((m & 0x400u) == 0)
+      {
+        m <<= 1;
+        --e;
+      }
+      m &= 0x3ffu;
+      f = (sign << 31) | ((e + 127 - 15) << 23) | (m << 13);
+    }
+  } else if (exp == 31)
+  {
+    f = (sign << 31) | 0x7f800000u | (mant << 13);
+  } else
+  {
+    f = (sign << 31) | ((exp + 127 - 15) << 23) | (mant << 13);
+  }
+  float out;
+  std::memcpy(&out, &f, sizeof(out));
+  return out;
+}
+
+bool ConvertDispOutputToFloat32(ITensor *out_tensor,
+                                int      height,
+                                int      width,
+                                cv::Mat &disp)
+{
+  CHECK_STATE(out_tensor != nullptr, "[LightStereo] output tensor is null");
+  const void *raw = out_tensor->RawPtr();
+  CHECK_STATE(raw != nullptr, "[LightStereo] `PostProcess` Got invalid output disp ptr !!!");
+
+  const size_t elem_bytes = out_tensor->GetElementByteSize();
+  const int    n          = height * width;
+  disp.create(height, width, CV_32FC1);
+  float *dst = disp.ptr<float>();
+
+  if (elem_bytes == 4)
+  {
+    std::memcpy(dst, raw, static_cast<size_t>(n) * sizeof(float));
+  } else if (elem_bytes == 2)
+  {
+    const auto *src = reinterpret_cast<const uint16_t *>(raw);
+    for (int i = 0; i < n; ++i)
+    {
+      dst[i] = Fp16ToFp32(src[i]);
+    }
+  } else if (elem_bytes == 1)
+  {
+    // UINT8: already final quantized values, use directly
+    const auto *src = reinterpret_cast<const uint8_t *>(raw);
+    for (int i = 0; i < n; ++i)
+    {
+      dst[i] = static_cast<float>(src[i]);
+    }
+  } else
+  {
+    LOG_ERROR("[LightStereo] unsupported output elem bytes: %zu", elem_bytes);
+    return false;
+  }
+  return true;
+}
+
+} // namespace
 
 class LightStereo : public BaseStereoMatchingModel {
 public:
@@ -91,15 +172,13 @@ bool LightStereo::PostProcess(std::shared_ptr<IPipelinePackage> _package)
               "`DetectionPipelinePackage`");
 
   auto p_blob_buffers = package->GetInferBuffer();
+  auto *out_tensor    = p_blob_buffers->GetTensor(output_blobs_name_[0]);
 
-  const void *output_disp = p_blob_buffers->GetTensor(output_blobs_name_[0])->RawPtr();
-  CHECK_STATE(output_disp != nullptr,
-              "[LightStereo] `PostProcess` Got invalid output disp ptr !!!");
-
-  cv::Mat disp(input_height_, input_width_, CV_32FC1);
-  memcpy(disp.data, output_disp, input_height_ * input_width_ * sizeof(float));
-  cv::imwrite("disp.png", disp);
-//  disp /= package->transform_scale;
+  cv::Mat disp;
+  CHECK_STATE(ConvertDispOutputToFloat32(out_tensor, input_height_, input_width_, disp),
+              "[LightStereo] convert output disp failed");
+  cv::imwrite("disp.bmp", disp);
+  //  disp /= package->transform_scale;
 
   // 1. crop
   const int original_height = package->left_image_data->GetImageDataInfo().image_height;
@@ -112,7 +191,7 @@ bool LightStereo::PostProcess(std::shared_ptr<IPipelinePackage> _package)
   // 2. resize to original
   cv::Mat disp_to_original;
   cv::resize(crop_disp, disp_to_original, {original_width, original_height});
-  cv::imwrite("disp_to_original.png", disp_to_original);
+  cv::imwrite("disp_to_original.bmp", disp_to_original);
   package->disp = disp_to_original;
 
   return true;
