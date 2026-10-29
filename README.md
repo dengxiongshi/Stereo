@@ -9,7 +9,7 @@
 ### Download Project
 
 ```
-https://github.com/dengxiongshi/Stereo.git
+git clone https://github.com/dengxiongshi/Stereo.git
 ```
 
 ### Run
