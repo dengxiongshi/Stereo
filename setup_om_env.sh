@@ -117,11 +117,15 @@ _check_bin() {
 
 _check_bin "${REPO_ROOT}/build/bin/test_stereo_banet"
 _check_bin "${REPO_ROOT}/build/bin/test_stereo_lightstereo"
+_check_bin "${REPO_ROOT}/build/bin/test_stereo_liteanystereo"
+_check_bin "${REPO_ROOT}/build/bin/test_stereo_liteanystereoV2"
 
 echo "[INFO] 环境配置完成。运行示例:"
 echo "  cd ${REPO_ROOT}/build/bin"
 echo "  ./test_stereo_banet"
 echo "  ./test_stereo_lightstereo"
+echo "  ./test_stereo_liteanystereo"
+echo "  ./test_stereo_liteanystereoV2"
 
 unset _SCRIPT_DIR _f _ASCEND_SOURCED _ASCEND_ENV_CANDIDATES
 unset _LIB_DIRS _d _NEW_PATH _BIN_DIR _img

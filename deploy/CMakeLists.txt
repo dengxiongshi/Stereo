@@ -31,6 +31,8 @@ include_directories(
 set(source_file
     src/lightstereo.cpp
     src/banet.cpp
+    src/liteanystereo.cpp
+    src/liteanystereoV2.cpp
 )
 
 add_library(${PROJECT_NAME} SHARED ${source_file})
@@ -45,3 +47,5 @@ target_include_directories(${PROJECT_NAME} PUBLIC ${PROJECT_SOURCE_DIR}/include)
 
 add_subdirectory(banet)
 add_subdirectory(lightstereo)
+add_subdirectory(liteanystereo)
+add_subdirectory(liteanystereoV2)
