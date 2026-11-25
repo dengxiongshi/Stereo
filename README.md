@@ -2,7 +2,11 @@
 
 ## About
 
-这个项目是基于[lightstereo_cpp](https://github.com/zz990099/lightstereo_cpp)和[banet_cpp](https://github.com/zz990099/banet_cpp)的综合c++实现，除了原先支持的`TensorRT`、`RKNN`、`OnnxRuntime`三种硬件平台，还添加了香橙派AI Pro中的Ascend 3104B(OM)模型的实现。
+这个项目是基于[lightstereo_cpp](https://github.com/zz990099/lightstereo_cpp)、[banet_cpp](https://github.com/zz990099/banet_cpp)和[liteanystereo_cpp](https://github.com/zz990099/liteanystereo_cpp)的综合c++实现，除了原先支持的`TensorRT`、`RKNN`、`OnnxRuntime`三种硬件平台，还添加了香橙派AI Pro中的Ascend 3104B(OM)模型的实现。
+
+## What's New
+
+- 增加LiteAnyStereo和LiteAnyStereoV2的实现。
 
 ## Usage
 
@@ -18,7 +22,7 @@ git clone https://github.com/dengxiongshi/Stereo.git
 cd Stereo
 ./build-starup.sh om|ort|rknn|trt
 cd build/bin
-./test_stereo_lightstereo | ./test_stereo_banet
+./test_stereo_lightstereo | ./test_stereo_banet | ./test_stereo_liteanystereo | ./test_stereo_liteanystereoV2
 ```
 
 注意：
@@ -69,10 +73,42 @@ cd build/bin
                           {"left", "right"},
                           {"/Mul_9:0:disp_pred"}
       );
+     test_stereo_liteanystereo.cpp:
+
+      auto engine = CreateOmInferCore(
+                    "../../weights/LiteAnyStereo.om",
+                    {{"left", {1, 3, 256, 512}}, {"right", {1, 3, 256, 512}}},
+                    {{"PartitionedCall_/model/ReduceSum_1_ReduceSum_344:0:disp_pred", {1, 1, 256, 512}}}
+      );
+
+      liteanystereo_model_ = CreateLiteAnyStereoModel(
+                    engine, preprocess_block, 256, 512,
+                    {"left", "right"},
+                    {"PartitionedCall_/model/ReduceSum_1_ReduceSum_344:0:disp_pred"}
+      );
+
+     test_stereo_liteanystereoV2.cpp:
+
+      auto engine = CreateOmInferCore(
+                    "../../weights/LAS2_S.om",
+                    {{"left", {1, 3, 256, 512}}, {"right", {1, 3, 256, 512}}},
+                    {{"PartitionedCall_/model/ReduceSum_1_ReduceSum_199:0:disp_pred", {1, 1, 256, 512}}}
+      );
+
+      liteanystereoV2_model_ = CreateLiteAnyStereoV2Model(
+                    engine, preprocess_block, 256, 512,
+                    {"left", "right"},
+                    {"PartitionedCall_/model/ReduceSum_1_ReduceSum_199:0:disp_pred"}
+      );
+    
 ```
 
 ## References
 
+[LightStereo](https://github.com/XiandaGuo/OpenStereo)
+
 [BANet](https://github.com/gangweix/BANet)
+
+[LiteAnyStereo](https://github.com/TomTomTommi/LiteAnyStereo)
 
 [EasyDeploy](https://github.com/zz990099/EasyDeployTool)

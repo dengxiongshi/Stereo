@@ -313,9 +313,9 @@ public:
         try {
             std::cout << "[INFO] 创建Ascend OM推理引擎..." << std::endl;
             auto engine = CreateOmInferCore(
-                    "../../weights/liteanystereo-S-KITTI.om",
+                    "../../weights/LiteAnyStereo.om",
                     {{"left", {1, 3, 256, 512}}, {"right", {1, 3, 256, 512}}},
-                    {{"PartitionedCall_/ReduceSum_1_ReduceSum_217:0:disp_pred", {1, 1, 256, 512}}}
+                    {{"PartitionedCall_/model/ReduceSum_1_ReduceSum_344:0:disp_pred", {1, 1, 256, 512}}}
             );
             if (!engine) {
                 std::cerr << "[ERROR] Ascend推理引擎创建失败！" << std::endl;
@@ -341,7 +341,7 @@ public:
             liteanystereo_model_ = CreateLiteAnyStereoModel(
                     engine, preprocess_block, 256, 512,
                     {"left", "right"},
-                    {"PartitionedCall_/ReduceSum_1_ReduceSum_217:0:disp_pred"}
+                    {"PartitionedCall_/model/ReduceSum_1_ReduceSum_344:0:disp_pred"}
             );
             if (!liteanystereo_model_) {
                 std::cerr << "[ERROR] 立体匹配模型初始化失败！" << std::endl;

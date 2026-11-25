@@ -1,5 +1,5 @@
 import acl
-om = "/home/HwHiAiUser/snap/lightstereo_onnx/weights/BANet-KITTI.om"  # 或绝对路径
+om = "/home/HwHiAiUser/snap/Stereo/weights/LAS2_S.om"  # 或绝对路径
 
 acl.init()
 acl.rt.set_device(0)

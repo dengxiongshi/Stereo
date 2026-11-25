@@ -203,7 +203,7 @@ public:
             // 创建ONNX推理引擎（捕获可能的异常）
             std::cout << "[INFO] 创建Onnx Runtime推理引擎..." << std::endl;
             auto engine = CreateOrtInferCore(
-                    "/mnt/g/python_work/DepthEstimation/BANet/banet-2d/weights/kitti_ori.onnx",
+                    "../../weights/BANet-kitti.onnx",
                     {{"left", {1, 3, 256, 512}}, {"right", {1, 3, 256, 512}}},  // 输入形状
                     {{"disp_pred", {1, 1, 256, 512}}}                                   // 输出形状
             );
